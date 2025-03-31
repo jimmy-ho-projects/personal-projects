@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string>
+
+//Reverse a user input string
+int main() {
+    std::string strInput = "";
+    std::string strReversed = ""; //store reversed string
+    
+    //input
+    std::cout<<"Enter string: ";
+    std::cin>>strInput;
+    strReversed = strInput;
+    
+    //reversing
+    int strLength = strInput.length(); //size not zero index
+    for(int ii = 0; ii < strLength; ii++){
+        strReversed[ii] = strInput[(strLength - 1) - ii]; //indexing string, zero index
+    }
+    
+    std::cout<<strReversed;
+    
+    return 0;
+}
