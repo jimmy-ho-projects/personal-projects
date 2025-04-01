@@ -4,6 +4,5 @@ this repo is going to be where I upload small, inconsequential personal projects
 
 honk honk
 
-/    /\_..._/\
-/   /~`o 3 o`~\
+
   
