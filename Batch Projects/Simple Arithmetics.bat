@@ -11,9 +11,9 @@ echo //*=*=*=*=*=*=*=*=*=*=*=\\
 echo:
 echo   * INTEGER CALC ONLY *
 echo:
-choice /c abc /n /m "A)Demo B)Integer Calc C)Exit >"
-	if %errorlevel%== 1 goto demo
-	if %errorlevel%== 2 goto Calc
+choice /c abc /n /m "[A]Calculate [B]Demo [C]Exit >"
+	if %errorlevel%== 1 goto Calc
+	if %errorlevel%== 2 goto demo
 	if %errorlevel%== 3 exit
 
 :demo
@@ -62,20 +62,64 @@ choice /c abcde /n /m ">"
 
 :add
 cls
-echo add
+echo Addition
+set /p num1= "First #: "
+set /a num1 = num1
+echo [First value saved as %num1%]
+set /p num2= "Second #: "
+set /a num2 = num2
+echo [Second value saved as %num2%]
+set /a num3 = num1 + num2
+echo  %num1% + %num2% = %num3%
 pause
+goto Calc
 
 :sub
 cls
-echo sub
+echo Subtraction
+set /p num1= "First #: "
+set /a num1 = num1
+echo [First value saved as %num1%]
+set /p num2= "Second #: "
+set /a num2 = num2
+echo [Second value saved as %num2%]
+set /a num3 = num1 - num2
+echo  %num1% - %num2% = %num3%
 pause
+goto Calc
 
 :mult
 cls
-echo mult
+echo Multiplication
+set /p num1= "First #: "
+set /a num1 = num1
+echo [First value saved as %num1%]
+set /p num2= "Second #: "
+set /a num2 = num2
+echo [Second value saved as %num2%]
+set /a num3 = num1 * num2
+echo  %num1% * %num2% = %num3%
 pause
+goto Calc
 
 :div
 cls
-echo div
+echo Division
+set /p num1= "First #: "
+set /a num1 = num1
+echo [First value saved as %num1%]
+set /p num2= "Second #: "
+set /a num2 = num2
+echo [Second value saved as %num2%]
+REM have division display remainder after whole div NOTE: USE COMPARE BATCH OP
+set /a num3 = num1 / num2
+if %num1% LSS %num2% set /a remainder = num2 - (num1 * num3)
+
+if %num1% GTR %num2% set /a remainder = num1 - (num2 * num3)
+
+if %num1% EQU %num2%set /a remainder = 0
+
+echo  %num1% / %num2% = %num3% remainder %remainder%
 pause
+goto Calc
+
