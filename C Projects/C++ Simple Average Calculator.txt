@@ -1,4 +1,12 @@
-// Online C++ compiler to run C++ program online
+/*
+Online C++ compiler to run C++ program online
+C++ Simple Average Calculator
+Calculates the average of up to 20 user inputted values, with numerical suffix updating accordingly. 
+
+Last modified 3/5/2025
+-Jimmy Ho
+*/
+
 #include <iostream>
 #include <string>
 

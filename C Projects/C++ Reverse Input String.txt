@@ -1,3 +1,13 @@
+/*
+Online C++ compiler to run C++ program online
+C++ Reverse Input String
+Takes in user input string and displays string backwards
+by looping through char array in reverse
+
+Last modified 3/7/2025
+-Jimmy Ho
+*/
+
 #include <iostream>
 #include <string>
 
