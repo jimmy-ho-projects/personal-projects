@@ -1,0 +1,12 @@
+If multiple arduino programs are saved in the same folder, they may
+reference each other or some and may not work
+
+see: 
+
+https://forum.arduino.cc/index.php?topic=448186.0
+
+Additionally, Arduino program must be
+saed with the same name as the FILE that
+they are saved in
+ex:
+Users > Jimmy > Desktop > Arduino_Practice_Programs > Arduino_Practice_Practive.ino
