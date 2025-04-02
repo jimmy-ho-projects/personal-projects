@@ -3,7 +3,13 @@ Projects/files written for windows environment (Win10 and below). Very
 basic programming stuff. 
 
 :_old
-not much. originally named "test". Probably to test minor things before coding project stuff
+    not much. originally named "test". Probably to test minor things before coding project stuff
 
 :Arvdel!
-looks like an attempt at an rpg. WIP (3/31/25). masy keep trying
+    looks like an attempt at an rpg. WIP (3/31/25). masy keep trying
+
+:Tic-Tac-Toe-v1
+    Tic tac toe implementation in BATCH! Runs in 
+    terminal. Quite proud of it so far :3 
+    Players always goes first
+    Created 4/1/25
