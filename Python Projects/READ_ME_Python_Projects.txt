@@ -17,3 +17,4 @@ Contains projects made using python. Ran in VSCode.
     TODO: Have graph update each iteration
     Created 4/1/25
     v1.2 4/2/25
+    Vers. 1.3 (4/3/25)

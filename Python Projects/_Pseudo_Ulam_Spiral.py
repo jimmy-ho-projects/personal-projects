@@ -12,14 +12,21 @@ Vers. 1.2 (4/2/25)
     * user-query stuff added
     * option to include or exlude 0 and 1 from list of primes
     * loading screen added
+
+Vers. 1.3 (4/3/25)
+    *Found way to display graph updating within loop using pyplot.ion(),
+        plt.show(), and plt.pause(0.001). Soln found at
+        https://stackoverflow.com/questions/28269157/plotting-in-a-non-blocking-way-with-matplotlib
+    *Added query to determine if show animation (slow) or final results immediantly
+    *Used time module to determine run time up to printed perentage of progress 
 - Jimmy Ho
 '''
 
-from time import sleep
+from time import sleep, time
 import matplotlib.pyplot as ploppy
 
 #====== functions ==========
-def loading_screen(currentIter, arrayPercentages):
+def loading_screen(beginTime, currentIter, arrayPercentages):
 #ctrl+f DOGDOGDOGDOGDOGDOGwoofwoof
     '''
     _05 = arrayPercentages[0]
@@ -32,32 +39,33 @@ def loading_screen(currentIter, arrayPercentages):
     _90 = arrayPercentages[7]
     _95 = arrayPercentages[8]
     _100 = arrayPercentages[9]'''
+    time_elapsed = int(time() - beginTime)
     if currentIter == 1:
-        print("[----------]....0%")
+        print("[----------]....0% [" + str(time_elapsed) + " seconds elapsed]")
     #account for range function jumping by 2s
     if currentIter == int(arrayPercentages[9]) or currentIter == int(arrayPercentages[9]) - 1 or currentIter == int(arrayPercentages[9]) + 1:
-        print("[██████████]....100%")
+        print("[██████████]....100% [" + str(time_elapsed) + " seconds elapsed]")
     try:
         ind_of_percentage = arrayPercentages.index(currentIter)
         match ind_of_percentage:
             case 0:
-                print("[█--------].... 5%")
+                print("[█--------].... 5% [" + str(time_elapsed) + " seconds elapsed]")
             case 1:
-                print("[██--------]....10%")
+                print("[██--------]....10% [" + str(time_elapsed) + " seconds elapsed]")
             case 2:
-                print("[███-------]....25%")
+                print("[███-------]....25% [" + str(time_elapsed) + " seconds elapsed]")
             case 3:
-                print("[████------]....50%")
+                print("[████------]....50% [" + str(time_elapsed) + " seconds elapsed]")
             case 4:
-                print("[█████-----]....65%")
+                print("[█████-----]....65% [" + str(time_elapsed) + " seconds elapsed]")
             case 5:
-                print("[██████----]....75%")
+                print("[██████----]....75% [" + str(time_elapsed) + " seconds elapsed]")
             case 6:
-                print("[███████---]....80%")
+                print("[███████---]....80% [" + str(time_elapsed) + " seconds elapsed]")
             case 7:
-                print("[████████--]....90%")
+                print("[████████--]....90% [" + str(time_elapsed) + " seconds elapsed]")
             case 8:
-                print("[█████████-]....95%")
+                print("[█████████-]....95% [" + str(time_elapsed) + " seconds elapsed]")
             case _:
                 ...
     except:
@@ -83,9 +91,11 @@ def loading_screen(currentIter, arrayPercentages):
             print("hella")
 '''
 
+#+++ - - - MAIN - - - ++++++++++++++++++++++++++++++
 #====== GENERATE PRIMES (pretty slow) ======
 primes = []
 loopVar = True
+beginTime = time()
 while loopVar:
     numPrimes = input("How many primes to find: ")
     try:
@@ -124,7 +134,7 @@ percentage_numPrimes = [int(numPrimes * .05), int(numPrimes * .1),
 
 currVal = 0
 for slug in range(1, numPrimes+1, 2):
-    loading_screen(slug, percentage_numPrimes) #loading screen funct 
+    loading_screen(beginTime, slug, percentage_numPrimes) #loading screen funct 
     currVal = slug
     notPrime = False
     for factor_check in range(2, int(currVal/2)):
@@ -137,7 +147,7 @@ for slug in range(1, numPrimes+1, 2):
 primes.insert(1, int(2))
 # ================================================================
 
-
+#=========== USER QUERY ==========================================
 #Query: Include 0 and 1? 
 # (Not considered primes but will alter graph without them)
 loopVar = True
@@ -154,11 +164,25 @@ while loopVar:
             loopVar = False
         else:
             print("Invalid response, try again (Y/N) >")
-    
+#Query: Animation or immediate?   
+loopVar = True
+while loopVar:
+    anim_or_nah = input("Show plot animation (slow!) or immediate result? (Y/N) >")
+    if anim_or_nah.isalpha(): 
+        if anim_or_nah == 'y' or anim_or_nah == 'Y':
+            ploppy.ion() #allows for updating graph in loop
+            anim_enable = True #to determine if enable anim, ctrl+f ANIMATEMEDADDY
+            loopVar = False
+        elif anim_or_nah == 'n' or anim_or_nah == 'n':
+            anim_enable = False #ctrl+f ANIMATEMEDADDY
+            loopVar = False
+        else:
+            print("Invalid response, try again (Y/N) >")
+# ================================================================
 
 print("Primes: " + str(primes))
 
-#Funny ulam spiral magic
+#============= Print Funny ulam spiral magic =============================
 x=0 
 y=0 
 u=1 
@@ -203,5 +227,12 @@ for i in range(len(primes)): #iterate until reach value at last index of "primes
             u = 0; v = -1;
 
     ploppy.plot([x, x+u],[y, y+v])
+    ploppy.draw()
+    if anim_enable: #keyword: ANIMATEMEDADDY
+        ploppy.pause(0.0001)
+
+ploppy.ioff()
 ploppy.show()
 print("Program completed")
+# ==================================================================
+#+++ - - - END MAIN - - - ++++++++++++++++++++++++++++++
