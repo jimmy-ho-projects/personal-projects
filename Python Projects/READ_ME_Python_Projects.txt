@@ -14,7 +14,7 @@ Contains projects made using python. Ran in VSCode.
     Python port of modified ulam spiral. Number line originating from 0,0 will
     proceed towards right 1 unit at a time. When a prime number of units is 
     reached, the line direction will rotate 90 deg.
-    TODO: Have graph update each iteration
     Created 4/1/25
     v1.2 4/2/25
     Vers. 1.3 (4/3/25)
+    Vers. 1.4 (4/4/25)

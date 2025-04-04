@@ -19,6 +19,15 @@ Vers. 1.3 (4/3/25)
         https://stackoverflow.com/questions/28269157/plotting-in-a-non-blocking-way-with-matplotlib
     *Added query to determine if show animation (slow) or final results immediantly
     *Used time module to determine run time up to printed perentage of progress 
+
+Vers. 1.4 (4/4/25)
+    *Fixed accuracy of timer for prime generation (moved from before QUERY to after QUERY)
+    *Halved num of factors to check from range (2 -> int 0.5 of total) to (3 -> int 0.5 of total, 2)
+        to only check odd factors (all even factors would come from 2)
+        MAYBE: check factors for smaller factors to further reduce computation with larger #s
+    *Added 45 degree option from MATLAB vers
+    *Added grid
+
 - Jimmy Ho
 '''
 
@@ -71,31 +80,10 @@ def loading_screen(beginTime, currentIter, arrayPercentages):
     except:
         ...
             
- 
-'''
-    match int(currentIter):
-        case int(_25):
-            print("cur " + str(currentIter))
-            print("per " + str(_25))
-        case int(_50):
-            print()
-        case int(_65):
-            print()
-        case int(_75):
-            print("FUCK")
-        case int(_80):
-            print()
-        case int(_90):
-            print()
-        case int(_95):
-            print("hella")
-'''
-
 #+++ - - - MAIN - - - ++++++++++++++++++++++++++++++
 #====== GENERATE PRIMES (pretty slow) ======
 primes = []
 loopVar = True
-beginTime = time()
 while loopVar:
     numPrimes = input("How many primes to find: ")
     try:
@@ -132,24 +120,24 @@ percentage_numPrimes = [int(numPrimes * .05), int(numPrimes * .1),
                         int(numPrimes * 0.95), numPrimes]
 #`````````````````````````````````````````````````````````````````````
 
+beginTime = time()
 currVal = 0
 for slug in range(1, numPrimes+1, 2):
     loading_screen(beginTime, slug, percentage_numPrimes) #loading screen funct 
     currVal = slug
     notPrime = False
-    for factor_check in range(2, int(currVal/2)):
+    for factor_check in range(3, int(currVal/2), 2):
         if currVal % factor_check == 0:
             notPrime = True
             break
     if notPrime == False:
         primes.append(currVal)        
-#2 is the only even prime, lil bugger
+#2 is the only even prime, lil bugger (manual insert)
 primes.insert(1, int(2))
 # ================================================================
 
 #=========== USER QUERY ==========================================
-#Query: Include 0 and 1? 
-# (Not considered primes but will alter graph without them)
+#Query: Include 0 and 1? (Not considered primes but will alter graph without them)
 loopVar = True
 while loopVar:
     include_zero_one = input("Include 0 and 1 with primes? (Y/N) >")
@@ -164,10 +152,24 @@ while loopVar:
             loopVar = False
         else:
             print("Invalid response, try again (Y/N) >")
+#Query: 90 or 45 degree rotation (counter-clockwise)? 
+loopVar = True
+while loopVar:
+    include_zero_one = input("90 or 45 degree rotation (counter-clockwise)? ([Y] 90 deg / [N] 45 deg) >")
+    if include_zero_one.isalpha(): 
+        if include_zero_one == 'y' or include_zero_one == 'Y':
+            #variable to enable/disable 45/90 ctrl+F SPINNYMEEE
+            spin = 90
+            loopVar = False
+        elif include_zero_one == 'n' or include_zero_one == 'n':
+            spin = 45
+            loopVar = False
+        else:
+            print("Invalid response, try again ([Y] 90 deg / [N] 45 deg) >")
 #Query: Animation or immediate?   
 loopVar = True
 while loopVar:
-    anim_or_nah = input("Show plot animation (slow!) or immediate result? (Y/N) >")
+    anim_or_nah = input("Show plot animation (slow!)? (Y/N) >")
     if anim_or_nah.isalpha(): 
         if anim_or_nah == 'y' or anim_or_nah == 'Y':
             ploppy.ion() #allows for updating graph in loop
@@ -194,44 +196,108 @@ rotationCount = 0 #increments through rotation
 #simple rotating vectors
 ploppy.figure(clear = False, figsize=(9,9)) #fig to save prev plotted graph
 ploppy.plot(0,0, 'or')
-for i in range(primes[-1]): #iterate linearly until reach value at last index of "primes"
-    #move to new (x,y) coord BEFORE changing rotation
-    if u == 1:
-        x = x + 1
-    if v == 1:
-        y = y + 1
-    if u == -1:
-        x = x - 1
-    if v == -1:
-        y = y - 1
+
+#keyword: SPINNYMEEE
+#90 degree spinning
+if spin == 90:
+    for i in range(primes[-1]): #iterate linearly until reach value at last index of "primes"
+        #move to new (x,y) coord BEFORE changing rotation
+        if u == 1:
+            x = x + 1
+        if v == 1:
+            y = y + 1
+        if u == -1:
+            x = x - 1
+        if v == -1:
+            y = y - 1
 
 
-#checks if iteration is greater or equal to prime
-#if so, will increment to next prime on list and 
-#tell next vector to rotate 90 deg, counter-clockwise
+    #checks if iteration is greater or equal to prime
+    #if so, will increment to next prime on list and 
+    #tell next vector to rotate 90 deg, counter-clockwise
 
-    
-    if i >= primes[primeCounter]:
-        primeCounter = primeCounter + 1
-        rotationCount = rotationCount + 1        
-    
-    modRotCnt = rotationCount % 4
-    match modRotCnt: #if iterate to a prime, rotate 90 degrees
-        case 0:
-            u = 1; v = 0;
-        case 1:
-            u = 0; v = 1;
-        case 2:
-            u = -1; v = 0;
-        case 3:
-            u = 0; v = -1;
+        
+        if i >= primes[primeCounter]:
+            primeCounter = primeCounter + 1
+            rotationCount = rotationCount + 1        
+        
+        modRotCnt = rotationCount % 4
+        match modRotCnt: #if iterate to a prime, rotate 90 degrees
+            case 0:
+                u = 1; v = 0;
+            case 1:
+                u = 0; v = 1;
+            case 2:
+                u = -1; v = 0;
+            case 3:
+                u = 0; v = -1;
 
-    ploppy.plot([x, x+u],[y, y+v])
-    ploppy.draw()
-    if anim_enable: #keyword: ANIMATEMEDADDY
-        ploppy.pause(0.0001)
+        ploppy.plot([x, x+u],[y, y+v], '-*')
+        ploppy.draw()
+        if anim_enable: #keyword: ANIMATEMEDADDY
+            ploppy.pause(0.0001)
+# 45 degree spinning
+else:
+    for i in range(primes[-1]): 
+        if u == 1:
+            x = x + 1
+        if u == 1 and v == 1:
+            x = x + 1
+            y = y + 1
+        if v == 1:
+            y = y + 1
+        if u == -1 and v == 1:
+            x = x - 1
+            y = y + 1
+        if u == -1:
+            x = x - 1
+        if u == -1 and v == -1:
+            x = x - 1
+            y = y - 1
+        if v == -1:
+            y = y - 1
+        if u == 1 and v == -1:
+            x = x + 1
+            y = y - 1
+        
+        if i >= primes[primeCounter]:
+            primeCounter = primeCounter + 1
+            rotationCount = rotationCount + 1        
+        
+        modRotCnt = rotationCount % 8
+        match modRotCnt:
+            case 0:
+                u = 1
+                v = 0
+            case 1:
+                u = 1
+                v = 1
+            case 2:
+                u = 0 
+                v = 1
+            case 3:
+                u = -1
+                v = 1
+            case 4:
+                u = -1
+                v = 0
+            case 5:
+                u = -1
+                v = -1
+            case 6:
+                u = 0
+                v = -1
+            case 7:
+                u = 1
+                v = -1
+
+        ploppy.plot([x, x+u],[y, y+v])
+        ploppy.draw()
+        if anim_enable: #keyword: ANIMATEMEDADDY
+            ploppy.pause(0.0001)
 
 ploppy.ioff()
+ploppy.grid(alpha=0.25)
 ploppy.show()
 print("Program completed")
 # ==================================================================
