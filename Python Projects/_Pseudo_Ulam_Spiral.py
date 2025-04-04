@@ -194,7 +194,7 @@ rotationCount = 0 #increments through rotation
 #simple rotating vectors
 ploppy.figure(clear = False, figsize=(9,9)) #fig to save prev plotted graph
 ploppy.plot(0,0, 'or')
-for i in range(len(primes)): #iterate until reach value at last index of "primes"
+for i in range(primes[-1]): #iterate linearly until reach value at last index of "primes"
     #move to new (x,y) coord BEFORE changing rotation
     if u == 1:
         x = x + 1
