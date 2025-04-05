@@ -4,7 +4,6 @@ Python port of modified ulam spiral. Number line originating from 0,0 will
 proceed towards right 1 unit at a time. When a prime number of units is 
 reached, the line direction will rotate 90 deg.
 NOTE: excluding 0 and 1 generates wildly different graph
-TODO: Have graph update each iteration
 Created 4/1/25
 
 Vers. 1.2 (4/2/25)
@@ -20,18 +19,28 @@ Vers. 1.3 (4/3/25)
     *Added query to determine if show animation (slow) or final results immediantly
     *Used time module to determine run time up to printed perentage of progress 
 
-Vers. 1.4 (4/4/25)
+Vers. 1.4 (4/5/25)
     *Fixed accuracy of timer for prime generation (moved from before QUERY to after QUERY)
-    *Halved num of factors to check from range (2 -> int 0.5 of total) to (3 -> int 0.5 of total, 2)
+    *Added timer for graphing time (applicable for primes >1,000,000)
+    *Reduced num of factors to check from range (2 -> int 0.5 of total) to (3 -> sqr root total, 2)
         to only check odd factors (all even factors would come from 2)
         MAYBE: check factors for smaller factors to further reduce computation with larger #s
     *Added 45 degree option from MATLAB vers
     *Added grid
-
+    *Output formatting
+    KNOWN ISSUES:
+    - MEMORY LEAK: python plot grows in memory size as writing, problematic for large numbers >1000000, need a way to release
+        memory while retaining plot that has already been written
+        Massive lag spikes (>200s) at around 500s (when plotting 1000000)
+        Plotting completes ~>800s but plot window 'not responding'
+        https://discourse.matplotlib.org/t/pyplot-interface-and-memory-management/22299
+        https://github.com/matplotlib/matplotlib/issues/27138
+        https://dev.to/siddhantkcode/optimizing-matplotlib-performance-handling-memory-leaks-efficiently-5cj2
 - Jimmy Ho
 '''
 
 from time import sleep, time
+from math import sqrt
 import matplotlib.pyplot as ploppy
 
 #====== functions ==========
@@ -126,7 +135,7 @@ for slug in range(1, numPrimes+1, 2):
     loading_screen(beginTime, slug, percentage_numPrimes) #loading screen funct 
     currVal = slug
     notPrime = False
-    for factor_check in range(3, int(currVal/2), 2):
+    for factor_check in range(3, int(sqrt(currVal)), 2):
         if currVal % factor_check == 0:
             notPrime = True
             break
@@ -196,7 +205,7 @@ rotationCount = 0 #increments through rotation
 #simple rotating vectors
 ploppy.figure(clear = False, figsize=(9,9)) #fig to save prev plotted graph
 ploppy.plot(0,0, 'or')
-
+beginTime = time()
 #keyword: SPINNYMEEE
 #90 degree spinning
 if spin == 90:
@@ -231,8 +240,10 @@ if spin == 90:
                 u = -1; v = 0;
             case 3:
                 u = 0; v = -1;
-
-        ploppy.plot([x, x+u],[y, y+v], '-*')
+        if i % 1000 == 0 or i == primes[-1]-1:
+            #will only print every 50 ticks rather than every loop, should be faster-ish (i want updating ui)
+            print("Plotting..." + str(i) + '/' + str(primes[-1]) + '[' + str(int(time()-beginTime)) + " seconds elapsed]", end = '\r', flush = True)
+        ploppy.plot([x, x+u],[y, y+v], '-')
         ploppy.draw()
         if anim_enable: #keyword: ANIMATEMEDADDY
             ploppy.pause(0.0001)
@@ -290,8 +301,10 @@ else:
             case 7:
                 u = 1
                 v = -1
-
-        ploppy.plot([x, x+u],[y, y+v])
+        if i % 1000 == 0 or i == primes[-1]-1:
+            #will only print every 50 ticks rather than every loop, should be faster-ish (i want updating ui)
+            print("Plotting..." + str(i) + '/' + str(primes[-1]) + '[' + str(int(time()-beginTime)) + " seconds elapsed]", end = '\r', flush = True)
+        ploppy.plot([x, x+u],[y, y+v], '-')
         ploppy.draw()
         if anim_enable: #keyword: ANIMATEMEDADDY
             ploppy.pause(0.0001)
@@ -299,6 +312,6 @@ else:
 ploppy.ioff()
 ploppy.grid(alpha=0.25)
 ploppy.show()
-print("Program completed")
+print("Program completed                                           ")
 # ==================================================================
 #+++ - - - END MAIN - - - ++++++++++++++++++++++++++++++

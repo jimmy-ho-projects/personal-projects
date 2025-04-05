@@ -1,0 +1,36 @@
+Benchmark values for how long it takes to run 
+prime generating algo given integer input 
+and measuring with python time() function
+
+4/4/25
+v1.3 prime gen algo: range range(3, int(currVal/2), 2)
+    input: 9,999,999
+    times:
+        %0 0s
+        %5 204s
+        %10 810s
+        %25 4610s
+        ... process terminated early (approximately 30-45 minutes later playing AC Mirage lol)
+
+v1.4 prime gen algo: range(3, int(sqrt(currVal)), 2)
+    input: 9,999,999
+    times:
+    [----------]....0% [0 seconds elapsed]
+    [█--------].... 5% [1 seconds elapsed]
+    [██--------]....10% [3 seconds elapsed]
+    [███-------]....25% [10 seconds elapsed]
+    [████------]....50% [30 seconds elapsed]
+    [█████-----]....65% [44 seconds elapsed]
+    [██████----]....75% [54 seconds elapsed]
+    [███████---]....80% [59 seconds elapsed]
+    [████████--]....90% [70 seconds elapsed]
+    [█████████-]....95% [76 seconds elapsed]
+    [██████████]....100% [82 seconds elapsed]
+
+    input: 1,000,000
+    times:
+        100% [2s]
+    printing [memory leak known]:
+        878s [figure window failed to show]
+
+
