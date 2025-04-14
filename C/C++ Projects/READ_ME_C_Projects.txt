@@ -1,4 +1,4 @@
-!!!Files in C Folder!!!
+!!!Files in C/C++ Folder!!!
 Collection of C/C++ related programs. Unless specified
 otherwise, assume use of online compiler such as
 https://www.programiz.com/cpp-programming/online-compiler/
@@ -19,5 +19,11 @@ https://www.programiz.com/cpp-programming/online-compiler/
     Created 3/9/2025
     Last modified 3/19/2025
     -Jimmy Ho
-
+:C++ TIC TAC TOE v1.0
+    Tic tac toe implementation in C++! Runs in terminal. Original was a BATCH file that
+    no one can run so that's useless...
+    Players always goes first
+    Created 4/4/25
+    completed batch->c++ 4/13/25
+    KNOWN ISSUE: ultra rare chance for CPU to randomly win w/o 3 in row; probably arithmetic error
 
