@@ -6,6 +6,9 @@ arithmetic mean, mode, and median
 
 Created 3/9/2025
 Last modified 3/19/2025
+v 1.0 completed 4/14/25
+    *finished the MODE statistic 
+
 -Jimmy Ho
 */
 
@@ -23,21 +26,22 @@ THINGS I'VE LEARNED FROM THIS PROJECT:
 3) for loop can use element of array using (int variable : array) parameter
 3.5) ONLY WORKS FOR ARRAYS (within scope); arr passed to function are POINTERS; trick not work
 4) i suck at naming vars
+5) functions cant return arrays; arrays passed into function actually deal with their pointers or something
 */
 
 //TODO: go through entries and determine if valid number or not using std::stof()
 
 //DECLARED FUNCTIONS
-int estimateEntries(std::string input); //estimate # valid entries: n spaces = n + 1 entries
-void entries_to_list(std::string input, std::string output[]); //convert input string to list of entries
+int ESTIMATE_ENTRIES(std::string input); //estimate # valid entries: n spaces = n + 1 entries
+void ENTRIES2LIST(std::string input, std::string output[]); //convert input string to list of entries
 int funct_numvalidEntries_ind(std::string input[], int numEntries);
 void funct_indvalidEntries_ind(std::string input[], int validEntries_ind[], int numEntries);
-int checkConsecutiveSpaces(int a, int b);
-std::string removeCommas(std::string input);
-void sort_array(float arr_in[], int arr_size);
-float findMean(float meanBaby[], int sizeBaby);
-float findMedian(float meanBaby[], int sizeBaby);
-float findMode(float meanBaby[], int sizeBaby);
+int CHECK_CONSECUTIVE_SPACES(int a, int b);
+std::string REMOVE_COMMAS(std::string input);
+void SORT_ARRAY(float arr_in[], int arr_size);
+float FIND_MEAN(float meanBaby[], int sizeBaby);
+float FIND_MEDIAN(float meanBaby[], int sizeBaby);
+void FIND_MODE(float meanBaby[], int sizeBaby, float modeBaby[]);
 
 //MAIN
 int main() {
@@ -47,11 +51,11 @@ int main() {
     std::string strInput;
     getline(std::cin, strInput);
     int intLength = strInput.length(); //store user input
-    int totalEntries = estimateEntries(strInput); //estimated # of entries
+    int totalEntries = ESTIMATE_ENTRIES(strInput); //estimated # of entries
     std::string arr_Entries[ totalEntries ] = {}; //array store valid entries
     
     //CONVERT USER INPUT TO ARRAY OF ENTRIES
-    entries_to_list(strInput, arr_Entries);
+    ENTRIES2LIST(strInput, arr_Entries);
     //debug: SHOWs user ENTRIES
     //for(int jj = 0; jj<totalEntries; jj++){std::cout<<arr_Entries[jj] << "\n";}
     
@@ -76,7 +80,7 @@ int main() {
     //std::cout<<"Is this correct? (y/n)";
     
     //TODO:: SORTING & STATISTICS FUNCTIONS AND DISPLAYS
-    sort_array(arrFinalEntries, int_sizeValidArray);
+    SORT_ARRAY(arrFinalEntries, int_sizeValidArray);
     
     std::cout<<"Sorted entries: ";
     intIncrement = 0;
@@ -88,19 +92,26 @@ int main() {
     }
     
     std::cout<<"\n====================\n";
-    std::cout<<"Mean (Arithmetic): " << findMean(arrFinalEntries, int_sizeValidArray) << "\n";// << findMean(arrFinalEntries)
-    std::cout<<"Median: " << findMedian(arrFinalEntries, int_sizeValidArray) << "\n";
-    std::cout<<"Mode: " << "\n";
-
-    return 0;
+    std::cout<<"Mean (Arithmetic): " << FIND_MEAN(arrFinalEntries, int_sizeValidArray) << "\n";// << FIND_MEAN(arrFinalEntries)
+    std::cout<<"Median: " << FIND_MEDIAN(arrFinalEntries, int_sizeValidArray) << "\n";
+    float mode_array[int_sizeValidArray + 1] = {}; 
+        /*need init array to store stat mode then pass into mode funct; first index reserved, 
+        funct will set to NUM OF MODES IN ARRAY to index through when cout
+        ie mode_array[0] = # of entries considered as "mode"*/ 
+    FIND_MODE(arrFinalEntries, int_sizeValidArray, mode_array);
+    std::cout<<"Mode: "<<'\n';
+    for(int tt = 0; tt < mode_array[0]; tt++){
+        std::cout << mode_array[tt+1] << " ";
+    }
+        return 0;
 }
 
 //FUNCTION DEFINITIONS
-int estimateEntries(std::string input){
+int ESTIMATE_ENTRIES(std::string input){
     int estEntries = 0;
     
     //Find and replace all commas w/space in string
-    input = removeCommas(input);
+    input = REMOVE_COMMAS(input);
     
     //Find all spaces that denote separate entries
     int foundLeft = 0;
@@ -109,7 +120,7 @@ int estimateEntries(std::string input){
     int foundRight = input.rfind(" "); //added space at end of string
     while((foundLeft<foundRight)){
         foundLeft = input.find(" ", foundLeft+1);
-        if(foundLeft!=std::string::npos && !checkConsecutiveSpaces(foundLeft, foundLeft_prev)){
+        if(foundLeft!=std::string::npos && !CHECK_CONSECUTIVE_SPACES(foundLeft, foundLeft_prev)){
             //IF string good practice, if no character found, function will pass highest string val
             estEntries++;
         }   
@@ -118,13 +129,13 @@ int estimateEntries(std::string input){
     return estEntries; 
 }
 
-void entries_to_list(std::string input, std::string output[]){
+void ENTRIES2LIST(std::string input, std::string output[]){
     //TODO
     /*Find all spaces that denote separate entries, copy string + 1 index after space up to next space
-    uses space finding and consec space detect from function estimateEntries*/
+    uses space finding and consec space detect from function ESTIMATE_ENTRIES*/
     
     //Find and replace all commas w/space in string
-    input = removeCommas(input);
+    input = REMOVE_COMMAS(input);
     
     int foundLeft = 0; int foundLeft_prev = -2;
     input.append(" "); int foundRight = input.rfind(" "); //added space at end of string
@@ -148,7 +159,7 @@ void entries_to_list(std::string input, std::string output[]){
         foundLeft = input.find(" ", foundLeft+1);
         
         //if entry position discovered
-        if(foundLeft!=std::string::npos && !checkConsecutiveSpaces(foundLeft, foundLeft_prev)){
+        if(foundLeft!=std::string::npos && !CHECK_CONSECUTIVE_SPACES(foundLeft, foundLeft_prev)){
             output[iterEntry].append(input, foundLeft_prev + 1, foundLeft - (foundLeft_prev + 1));
             iterEntry++;
         }   
@@ -191,13 +202,13 @@ void funct_indvalidEntries_ind(std::string input[], int validEntries_ind[], int 
     }
 }
 
-int checkConsecutiveSpaces(int a, int b){
+int CHECK_CONSECUTIVE_SPACES(int a, int b){
     //If inputs consecutive or same, return true
     if( (a-b == 1) || (a-b == -1)  ){/*std::cout<<"consec"<<"\n";*/return 1;}
     else{/*std::cout<<"not consec"<<"\n";*/return 0;}
 }
 
-std::string removeCommas(std::string input){
+std::string REMOVE_COMMAS(std::string input){
     //Find and replace all commas w/space in string
     int foundcomma = input.find(","); //edge case: comma at 0 index
     if(foundcomma!=std::string::npos){input[foundcomma] = ' ';}   
@@ -208,7 +219,7 @@ std::string removeCommas(std::string input){
     return input;
 }
 
-void sort_array(float arr_in[], int arr_size){
+void SORT_ARRAY(float arr_in[], int arr_size){
     //sorts array from least to greatest
     bool sort_loop = true; //set false if any sorting performed
     while(sort_loop){
@@ -225,7 +236,7 @@ void sort_array(float arr_in[], int arr_size){
     }
 }
 
-float findMean( float meanBaby[], int sizeBaby){
+float FIND_MEAN( float meanBaby[], int sizeBaby){
     float horse = 0;
     for(int apple = 0; apple < sizeBaby; apple++){
         horse = horse + meanBaby[apple];
@@ -233,7 +244,7 @@ float findMean( float meanBaby[], int sizeBaby){
     return horse / sizeBaby;
 }
 
-float findMedian(float meanBaby[], int sizeBaby){
+float FIND_MEDIAN(float meanBaby[], int sizeBaby){
     /*
     median = index of halfway of array
     if size uneven, halfway = (total - 1) / 2
@@ -257,17 +268,46 @@ float findMedian(float meanBaby[], int sizeBaby){
     }
 }
 
-/*
-float findMode(float meanBaby[], int sizeBaby){
-    //assumes array sorted Least to greatest
-    float num = meanBaby[0]; //initi w first element; store num with most repition
-    int reapet_count = 0; //increment when repeat, reset when 
-    for(int pp = 1; pp < sizeBaby; pp++){
-        if(meanBaby[pp] == num){
-            
+
+void FIND_MODE(float meanBaby[], int sizeBaby, float modeBaby[]){
+    //assume input array sorted
+    /* 
+    modeBaby is empty array of same size meanBaby (has our values, sorted)
+    for every # repeat, counter will increment and count stored in
+    temp_Baby, where index for count correlates to index for value in 
+    meanBaby. Let's us find highest # repeats in temp_Baby, then store in
+    modeBaby with # repeats recorded
+    */
+    //compare to previous index, if match, increment counter else reset counter
+    float curr_entry; //track current entry
+    float prev_entry;
+    int curr_count = 1; //current count of rep
+    int highest_count = 1;
+    int temp_Baby[sizeBaby] = {}; //store # of repeats; index correlation to meanBaby
+    
+    //increment counter if repeat, assign number of repeats to modeBaby array (index correlate with meanBaby)
+    for(int rr = 0; rr < sizeBaby; rr++){
+        curr_entry = meanBaby[rr];
+        if(curr_entry == prev_entry){
+            ++curr_count;
+            if(curr_count>highest_count){
+                highest_count = curr_count;
+            } //update highest recorded rep
+        } //repeat: increment
+        else{curr_count = 1; prev_entry = curr_entry;} //not repeat: update prev_entry
+        temp_Baby[rr] = curr_count;
+    }
+    
+    //find index(s) of highest number of reps in temp_Baby
+    curr_count = 0; //re-using int variable to index modeBaby array, starting at 1
+    for(int rr = 0; rr < sizeBaby; rr++){
+        if(temp_Baby[rr] == highest_count){
+            modeBaby[curr_count+1] = meanBaby[rr]; //modeBaby[0] reserved for curr_count actual value
+            ++curr_count;
         }
     }
-}*/
+    modeBaby[0] = curr_count;
+}
 
 
 

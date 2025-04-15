@@ -18,6 +18,8 @@ https://www.programiz.com/cpp-programming/online-compiler/
     arithmetic mean, mode, and median
     Created 3/9/2025
     Last modified 3/19/2025
+    v 1.0 completed 4/14/25
+        *finished the MODE statistic 
     -Jimmy Ho
 :C++ TIC TAC TOE v1.0
     Tic tac toe implementation in C++! Runs in terminal. Original was a BATCH file that
