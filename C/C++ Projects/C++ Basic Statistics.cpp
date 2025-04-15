@@ -8,12 +8,14 @@ Created 3/9/2025
 Last modified 3/19/2025
 v 1.0 completed 4/14/25
     *finished the MODE statistic 
-
+v1.1 4/14/25
+    *added HARMONIC and GEOMETRIC means
 -Jimmy Ho
 */
 
 #include <iostream>
 #include <string>
+#include <cmath> //need pow() like oncce :(
 
 /*
 Take in and parse string of data input, assume size of array of strings to store values and run basic statistical tests
@@ -39,7 +41,9 @@ void funct_indvalidEntries_ind(std::string input[], int validEntries_ind[], int 
 int CHECK_CONSECUTIVE_SPACES(int a, int b);
 std::string REMOVE_COMMAS(std::string input);
 void SORT_ARRAY(float arr_in[], int arr_size);
-float FIND_MEAN(float meanBaby[], int sizeBaby);
+float FIND_MEAN_ALG(float meanBaby[], int sizeBaby);
+float FIND_MEAN_HARM(float meanBaby[], int sizeBaby);
+float FIND_MEAN_GEO(float meanBaby[], int sizeBaby);
 float FIND_MEDIAN(float meanBaby[], int sizeBaby);
 void FIND_MODE(float meanBaby[], int sizeBaby, float modeBaby[]);
 
@@ -92,7 +96,9 @@ int main() {
     }
     
     std::cout<<"\n====================\n";
-    std::cout<<"Mean (Arithmetic): " << FIND_MEAN(arrFinalEntries, int_sizeValidArray) << "\n";// << FIND_MEAN(arrFinalEntries)
+    std::cout<<"Mean (Arithmetic): " << FIND_MEAN_ALG(arrFinalEntries, int_sizeValidArray) << "\n";
+    std::cout<<"Mean (Harmonic): " << FIND_MEAN_HARM(arrFinalEntries, int_sizeValidArray) << "\n";
+    std::cout<<"Mean (Geometric): " << FIND_MEAN_GEO(arrFinalEntries, int_sizeValidArray) << "\n";
     std::cout<<"Median: " << FIND_MEDIAN(arrFinalEntries, int_sizeValidArray) << "\n";
     float mode_array[int_sizeValidArray + 1] = {}; 
         /*need init array to store stat mode then pass into mode funct; first index reserved, 
@@ -236,12 +242,29 @@ void SORT_ARRAY(float arr_in[], int arr_size){
     }
 }
 
-float FIND_MEAN( float meanBaby[], int sizeBaby){
+float FIND_MEAN_ALG( float meanBaby[], int sizeBaby){
+    //algebraic mean
     float horse = 0;
     for(int apple = 0; apple < sizeBaby; apple++){
         horse = horse + meanBaby[apple];
     }
     return horse / sizeBaby;
+}
+
+float FIND_MEAN_HARM(float meanBaby[], int sizeBaby){
+    float ploppy = 0;
+    for(int ww = 0; ww < sizeBaby; ww++){
+        ploppy = ploppy + (1 / meanBaby[ww]);
+    }
+    return sizeBaby / ploppy;
+}
+
+float FIND_MEAN_GEO(float meanBaby[], int sizeBaby){
+    float ploppy = meanBaby[0];
+    for(int ww = 1; ww < sizeBaby; ww++){
+        ploppy = ploppy * meanBaby[ww];
+    }
+    return pow(ploppy, 1.0/sizeBaby); //pow() takes float input, giving int will truncate and give wrong values
 }
 
 float FIND_MEDIAN(float meanBaby[], int sizeBaby){
@@ -267,7 +290,6 @@ float FIND_MEDIAN(float meanBaby[], int sizeBaby){
         return med;
     }
 }
-
 
 void FIND_MODE(float meanBaby[], int sizeBaby, float modeBaby[]){
     //assume input array sorted
