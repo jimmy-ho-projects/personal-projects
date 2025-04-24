@@ -13,33 +13,36 @@ Created 4/17/25
 #include <iostream>
 #include <string>
 bool CHECK_WIN_COND(int A, int B,int C,int D,int E, int F, int G,int H,int I, int numMoves); //TODO
-void IND2SUB(int linearInd, int size_X, int size_Y, int subInd[2]){
-	/*takes linear index + specified size and stores subscript index in subInd array (must be passed into function)
-	takes advantage of integer division rounding down. 0-index. Below is 5x5, but coord starts at 0 
-	Format (based on MATLAB indexing):
-    * _0__1__2__3__4__
-	0| 0  5  10 15 20 |
-	1| 1  6  11 16 21 |
-	2| 2  7  12 17 22 |
-	3| 3  8  13 18 23 |
-	4| 4  9  14 19 24 |
-	-------------------
-	*/
-	
-	subInd[0] = linearInd / size_X;
-	subInd[1] = linearInd / size_Y;
+void IND2SUB(int linearInd, int size_X, int size_Y, int subInd[2]);
+void PRINT_BOARD(int board[], int board_dimension[3], int numMoves){
+	printf("Turn: %i \n", numMoves);
+	/* board[#] = -1 will print X, = -2 will print O*/
+	int currInd = 0; //indexing through board
+	for(int row = 0; row < board_dimension[1]; row++){
+		std::cout<<" ";
+		for(int column = 0; column < board_dimension[0]; column++){
+			std::cout<<"[ ";
+			if(board[currInd] == -1){std::cout<<"X";}
+			else if(board[currInd] == -2){std::cout<<"O";}
+			else{std::cout<<board[currInd];}
+			std::cout<<" ]";
+			++currInd;
+		}
+		std::cout<<"\n";
+	}
 }
 
 int main(){ 
     
 	bool loopVar = true;
-    int board_dimension[2] = {0,0};
+    int board_dimension[3] = {0,0,0}; //{X, Y, total # elements}
 	int numMoves = 0;
     srand(time(0) * rand()); //init w/random seed for CPU TURN
     
     //===QUERY: BOARD SIZE=============================================================
     std::string query_temp = "";
     std::cout<<"BOARD SIZE MUST BE AT LEAST 5x5\n";
+	//get size X-dim
     while(loopVar){
         std::cout << "Size of board (X axis): ";
         std::cin >> query_temp;
@@ -52,42 +55,35 @@ int main(){
             std::cout<<"Invalid input\n";
         }
     }
+	//get size Y-dim
     loopVar = true;
-        while(loopVar){
-        std::cout << "Size of board (Y axis): ";
-            std::cin >> query_temp;
-            try{
-                board_dimension[1] = std::stoi(query_temp);
-                if(board_dimension[1] < 5){std::cout<<"Dimension cannot be below 5\n";}
-                else{loopVar = false;}
-            }
-            catch(...){
-                std::cout<<"Invalid input\n";
-            }
+	while(loopVar){
+		std::cout << "Size of board (Y axis): ";
+			std::cin >> query_temp;
+			try{
+				board_dimension[1] = std::stoi(query_temp);
+				if(board_dimension[1] < 5){std::cout<<"Dimension cannot be below 5\n";}
+				else{loopVar = false;}
+			}
+			catch(...){
+				std::cout<<"Invalid input\n";
+			}
     }
+
+	board_dimension[2] = board_dimension[1] * board_dimension[0]; //update w/ tot number of elements 
 
     //TODO: INIT BOARD SIZE + CHOICES, X and O will correlate to neg int values, implements if checks 
     //===INITIALIZING BOARD ===========================================================
-    int board[board_dimensions[0] * board_dimensions[1]] = {};
-	for(int ii = 0; ii < board_dimensions[0] * board_dimensions[1]; ii++){
+    int board[board_dimensions[2]] = {};
+	for(int ii = 0; ii < board_dimensions[2]; ii++){
 		board[ii] = ii;
 	}
-    
-    
-    
- 
-
 
 	// ===MAIN LOOP===
     loopVar = true;
 	while(loopVar){
 		// ==== Print Board ====
-		printf("Turn: %i \n", numMoves);
-		printf(" [ %c ][ %c ][ %c ]\n", A, B, C);
-		std::cout << " ===============" <<'\n';
-		printf(" [ %c ][ %c ][ %c ]\n", D, E, F);
-		std::cout << " ===============" <<'\n';
-		printf(" [ %c ][ %c ][ %c ]\n", G, H, I);
+		PRINT_BOARD(board, board_dimension, numMoves);
 
 		// ==== Taking Turns ====
 		//PLAYER TURN
@@ -229,4 +225,21 @@ bool CHECK_WIN_COND(int A, int B,int C,int D,int E, int F, int G,int H,int I, in
         return false;
     }
     else {return true;}
+}
+
+void IND2SUB(int linearInd, int size_X, int size_Y, int subInd[2]){
+	/*takes linear index + specified size and stores subscript index in subInd array (must be passed into function)
+	takes advantage of integer division rounding down. 0-index. Below is 5x5, but coord starts at 0 
+	Format (based on MATLAB indexing):
+    * _0__1__2__3__4__
+	0| 0  5  10 15 20 |
+	1| 1  6  11 16 21 |
+	2| 2  7  12 17 22 |
+	3| 3  8  13 18 23 |
+	4| 4  9  14 19 24 |
+	-------------------
+	*/
+	
+	subInd[0] = linearInd / size_X;
+	subInd[1] = linearInd / size_Y;
 }
