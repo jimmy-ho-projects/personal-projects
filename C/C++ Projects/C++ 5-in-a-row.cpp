@@ -13,6 +13,22 @@ Created 4/17/25
 #include <iostream>
 #include <string>
 bool CHECK_WIN_COND(int A, int B,int C,int D,int E, int F, int G,int H,int I, int numMoves); //TODO
+void IND2SUB(int linearInd, int size_X, int size_Y, int subInd[2]){
+	/*takes linear index + specified size and stores subscript index in subInd array (must be passed into function)
+	takes advantage of integer division rounding down. 0-index. Below is 5x5, but coord starts at 0 
+	Format (based on MATLAB indexing):
+    * _0__1__2__3__4__
+	0| 0  5  10 15 20 |
+	1| 1  6  11 16 21 |
+	2| 2  7  12 17 22 |
+	3| 3  8  13 18 23 |
+	4| 4  9  14 19 24 |
+	-------------------
+	*/
+	
+	subInd[0] = linearInd / size_X;
+	subInd[1] = linearInd / size_Y;
+}
 
 int main(){ 
     
@@ -50,22 +66,16 @@ int main(){
             }
     }
 
-    //TODO: INIT BOARD SIZE + CHOICES
+    //TODO: INIT BOARD SIZE + CHOICES, X and O will correlate to neg int values, implements if checks 
+    //===INITIALIZING BOARD ===========================================================
+    int board[board_dimensions[0] * board_dimensions[1]] = {};
+	for(int ii = 0; ii < board_dimensions[0] * board_dimensions[1]; ii++){
+		board[ii] = ii;
+	}
     
     
     
-    
-    
-    
-    
-    
-    
-    
-	//Variable for player input (ASCII)
-	int A = 49; int B = 50; int C = 51;
-	int D = 52; int E = 53; int F = 54;
-	int G = 55; int H = 56; int I = 57;
-	//array to map CPU choice # to letter
+ 
 
 
 	// ===MAIN LOOP===
