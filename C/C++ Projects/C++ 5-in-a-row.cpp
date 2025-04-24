@@ -13,24 +13,9 @@ Created 4/17/25
 #include <iostream>
 #include <string>
 bool CHECK_WIN_COND(int A, int B,int C,int D,int E, int F, int G,int H,int I, int numMoves); //TODO
-void IND2SUB(int linearInd, int size_X, int size_Y, int subInd[2]);
-void PRINT_BOARD(int board[], int board_dimension[3], int numMoves){
-	printf("Turn: %i \n", numMoves);
-	/* board[#] = -1 will print X, = -2 will print O*/
-	int currInd = 0; //indexing through board
-	for(int row = 0; row < board_dimension[1]; row++){
-		std::cout<<" ";
-		for(int column = 0; column < board_dimension[0]; column++){
-			std::cout<<"[ ";
-			if(board[currInd] == -1){std::cout<<"X";}
-			else if(board[currInd] == -2){std::cout<<"O";}
-			else{std::cout<<board[currInd];}
-			std::cout<<" ]";
-			++currInd;
-		}
-		std::cout<<"\n";
-	}
-}
+void IND2SUB(int linearInd, int size_X, int size_Y, int &subInd[2]); //pass by reference &, allow modification by function
+void SUB2IND(int subInd[2], int size_X, int size_Y, int &linearInd); //pass by reference &, allow modification by function
+void PRINT_BOARD(int board[], int board_dimension[3], int numMoves);
 
 int main(){ 
     
@@ -227,7 +212,7 @@ bool CHECK_WIN_COND(int A, int B,int C,int D,int E, int F, int G,int H,int I, in
     else {return true;}
 }
 
-void IND2SUB(int linearInd, int size_X, int size_Y, int subInd[2]){
+void IND2SUB(int linearInd, int size_X, int size_Y, int &subInd[2]){
 	/*takes linear index + specified size and stores subscript index in subInd array (must be passed into function)
 	takes advantage of integer division rounding down. 0-index. Below is 5x5, but coord starts at 0 
 	Format (based on MATLAB indexing):
@@ -242,4 +227,39 @@ void IND2SUB(int linearInd, int size_X, int size_Y, int subInd[2]){
 	
 	subInd[0] = linearInd / size_X;
 	subInd[1] = linearInd / size_Y;
+}
+
+void SUB2IND(int subInd[2], int size_X, int size_Y, int &linearInd){
+	/*
+	Subscript -> linear index. Multiply X subscript by size of Y axis, then add Y subscript
+	* _0__1__2__3__
+	0| 0  5  10 15 |
+	1| 1  6  11 16 |
+	2| 2  7  12 17 |
+	3| 3  8  13 18 |
+	4| 4  9  14 19 |
+	-------------------
+	*/
+	linearInd = (subInd[0] * size_Y) + subInd[1];
+}
+
+void PRINT_BOARD(int board[], int board_dimension[3], int numMoves){
+	printf("Turn: %i \n", numMoves);
+	/* board[#] = -1 will print X, = -2 will print O*/
+	int currInd = 0; //linear index for board; convert from row/column loop variables
+	int subInd[2] = {0,0}; //subscript indexing
+	for(int row = 0; row < board_dimension[1]; row++){
+		std::cout<<" ";
+		for(int column = 0; column < board_dimension[0]; column++){
+			std::cout<<"[ ";
+			subInd[0] = column;
+			subInd[1] = row;
+			SUB2IND(subInd, board_dimension[0], board_dimension[1], currInd);
+			if(board[currInd] == -1){std::cout<<"X";}
+			else if(board[currInd] == -2){std::cout<<"O";}
+			else{std::cout<<board[currInd];}
+			std::cout<<" ]";
+		}
+		std::cout<<"\n";
+	}
 }
