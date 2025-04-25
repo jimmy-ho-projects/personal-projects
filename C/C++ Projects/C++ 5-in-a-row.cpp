@@ -5,6 +5,9 @@ WIP 5 IN A ROW v1.0
 Created 4/17/25
     completed ???
     
+    //TODO: win condition; formatting issues if num elements triple digits or more; IND2SUB and SUB2IND functions
+    //might be wonky due to pass by reference formatting and untested changes
+    
     https://cplusplus.com/forum/beginner/9148/
     
 -Jimmy Ho
@@ -13,7 +16,7 @@ Created 4/17/25
 #include <iostream>
 #include <string>
 bool CHECK_WIN_COND(int A, int B,int C,int D,int E, int F, int G,int H,int I, int numMoves); //TODO
-void IND2SUB(int linearInd, int size_X, int size_Y, int &subInd[2]); //pass by reference &, allow modification by function
+void IND2SUB(int linearInd, int size_X, int size_Y, int (&subInd)); //pass by reference &, allow modification by function
 void SUB2IND(int subInd[2], int size_X, int size_Y, int &linearInd); //pass by reference &, allow modification by function
 void PRINT_BOARD(int board[], int board_dimension[3], int numMoves);
 
@@ -59,8 +62,8 @@ int main(){
 
     //TODO: INIT BOARD SIZE + CHOICES, X and O will correlate to neg int values, implements if checks 
     //===INITIALIZING BOARD ===========================================================
-    int board[board_dimensions[2]] = {};
-	for(int ii = 0; ii < board_dimensions[2]; ii++){
+    int board[board_dimension[2]] = {};
+	for(int ii = 0; ii < board_dimension[2]; ii++){
 		board[ii] = ii;
 	}
 
@@ -81,30 +84,14 @@ int main(){
 		    std::cin>>temp_pChoice;
 		    //checks for valid integer input, 0 if not
 		    try{pChoice = stoi(temp_pChoice);}
-		    catch(...){pChoice = 0;}
-		    
-		    switch(pChoice){
-		        case 1:
-		            if(A==49){A=88; choice_loop=false; break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};
-		        case 2:
-		            if(B==50){B=88; choice_loop=false;break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};
-		        case 3:
-		            if(C==51){C=88; choice_loop=false;break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};
-		        case 4:
-        	        if(D==52){D=88; choice_loop=false;break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};    
-		        case 5:
-		            if(E==53){E=88; choice_loop=false;break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};
-		        case 6:
-		            if(F==54){F=88; choice_loop=false;break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};
-		        case 7:
-	                if(G==55){G=88; choice_loop=false;break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};
-		        case 8: 
-	                if(H==56){H=88; choice_loop=false;break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};
-		        case 9:
-		            if(I==57){I=88; choice_loop=false;break;} else {std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): "; break;};
-		        default:
-		            std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): ";
-		            break;
+		    catch(...){pChoice = -4;} //-4 for error
+		    /* board[#] = -1 will print X, = -2 will print O*/
+			if(pChoice == board[pChoice]){
+			    board[pChoice] = -1; //set to X
+			    choice_loop = false;
+			}
+			else {
+		        std::cout<<"█Invalid move, buster!█\nPlayer Turn ( X ): ";
 		    }
 		}
 	
@@ -119,46 +106,32 @@ int main(){
                 choice_loop = false;
                 break;} 
     	    random_number = rand() % 9 + 1;
-    	    switch(random_number){
-    	        case 1:
-    	            if(A==49){A=64; choice_loop = false; break;} else {break;}
-    	        case 2:
-    	            if(B==50){B=64; choice_loop = false;  break;} else {break;}
-    	        case 3:
-    	            if(C==51){C=64;  choice_loop = false; break;} else {break;}
-    	        case 4:
-        	        if(D==52){D=64;  choice_loop = false; break;} else {break;} 
-    	        case 5:
-    	            if(E==53){E=64;  choice_loop = false; break;} else {break;}
-    	        case 6:
-    	            if(F==54){F=64;  choice_loop = false; break;} else {break;}
-    	        case 7:
-                    if(G==55){G=64;  choice_loop = false; break;} else {break;}
-    	        case 8: 
-                    if(H==56){H=64;  choice_loop = false; break;} else {break;}
-    	        case 9:
-    	            if(I==57){I=64;  choice_loop = false; break;} else {break;}
-    	    }
-    	    attempt_counter = attempt_counter + 1;
-	    }
+    	    
+    	    if(random_number == board[random_number]){
+			    board[random_number] = -2; //set to X
+			    choice_loop = false;
+			}
+			else {
+		        attempt_counter = attempt_counter + 1;
+		    }
+
 	    std::cout << "█CPU chose: " << random_number <<'\n';
 	
-	
 	    //CHECK WIN CONDITION
-	    if(numMoves >= 2){
-	        loopVar = CHECK_WIN_COND(A,B,C,D,E,F,G,H,I,numMoves);
-	    }  
+	    //if(numMoves >= 2){
+	        //loopVar = CHECK_WIN_COND(board, numMoves);
+	    //}  
 	    
 	    numMoves = numMoves + 1;
-	}
-	
-	return 0;
+	    }
+    }
+    return 0;
 }
-
+/*
 bool CHECK_WIN_COND(int A, int B,int C,int D,int E, int F, int G,int H,int I, int numMoves){
-    /*return TRUE if no win, maintain while loop
-    return FALSE if win detected
-    Checking if three-in-row is = int values times 3*/
+    //return TRUE if no win, maintain while loop
+    //return FALSE if win detected
+    //Checking if three-in-row is = int values times 3
     
     //CHECKING IF PLAYER X WoN
     int X = 88, Y = 64;
@@ -211,8 +184,10 @@ bool CHECK_WIN_COND(int A, int B,int C,int D,int E, int F, int G,int H,int I, in
     }
     else {return true;}
 }
+*/
 
-void IND2SUB(int linearInd, int size_X, int size_Y, int &subInd[2]){
+void IND2SUB(int linearInd, int size_X, int size_Y, int (&subInd)){
+    //pass by reference syntax for arrays
 	/*takes linear index + specified size and stores subscript index in subInd array (must be passed into function)
 	takes advantage of integer division rounding down. 0-index. Below is 5x5, but coord starts at 0 
 	Format (based on MATLAB indexing):
@@ -225,8 +200,8 @@ void IND2SUB(int linearInd, int size_X, int size_Y, int &subInd[2]){
 	-------------------
 	*/
 	
-	subInd[0] = linearInd / size_X;
-	subInd[1] = linearInd / size_Y;
+	(&subInd)[0] = linearInd / size_X;
+	(&subInd)[1] = linearInd / size_Y;
 }
 
 void SUB2IND(int subInd[2], int size_X, int size_Y, int &linearInd){
@@ -255,10 +230,12 @@ void PRINT_BOARD(int board[], int board_dimension[3], int numMoves){
 			subInd[0] = column;
 			subInd[1] = row;
 			SUB2IND(subInd, board_dimension[0], board_dimension[1], currInd);
-			if(board[currInd] == -1){std::cout<<"X";}
-			else if(board[currInd] == -2){std::cout<<"O";}
+			if(board[currInd] == -1){std::cout<<"X ";}
+			else if(board[currInd] == -2){std::cout<<"O ";}
 			else{std::cout<<board[currInd];}
-			std::cout<<" ]";
+			//formatting: double digit occupy same 3 char space as 1 digit
+			if(currInd>=10){std::cout<<"]";}
+			else{std::cout<<" ]";}
 		}
 		std::cout<<"\n";
 	}
