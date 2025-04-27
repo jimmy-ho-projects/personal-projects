@@ -4,7 +4,8 @@ Also attempt at a readable structure for use with brainfuck
 https://sange.fi/esoteric/brainfuck/impl/interp/i.html
 TODO: convert values over 9 into ASCII representation
 
-Created 26 April 2025
+Created 25-26 April 2025
+Finished 27 April 2025
 _ Jimmy Ho
 
 Format
