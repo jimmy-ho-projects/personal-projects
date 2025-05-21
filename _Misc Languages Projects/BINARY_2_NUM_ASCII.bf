@@ -6,7 +6,8 @@ TODO: convert values over 9 into ASCII representation
 NOTE: ptr can store range neg127 to pos127 oh no
 
 Created 25_26 April 2025
-Finished 27 April 2025
+Finished 27 April 2025 (original 4 bit vers)
+TODO complete 8 bit expansion
 _ Jimmy Ho
 
 Format

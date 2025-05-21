@@ -10,6 +10,13 @@ Contains projects made using python. Ran in VSCode.
     I don't think I'll go back organizing them so
     uuuhhh... this is the trash dump :3
 
+:Morse_Code_Translate.py
+    Uses Python dict method to translate morse code input into upper case english char.
+    Can detect english char to translate to morse. Displays individual char and associated 
+    translation. Will ignore any invalid characters (aka anything that isn't morse code
+    chars .-/ or english alphabet.) Made it cuz why not.
+    Completed 20 May 2025
+
 :_Pseudo_Ulam_Spiral_v1.2.py
     Python port of modified ulam spiral. Number line originating from 0,0 will
     proceed towards right 1 unit at a time. When a prime number of units is 
