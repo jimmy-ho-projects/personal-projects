@@ -10,6 +10,10 @@ Contains projects made using python. Ran in VSCode.
     I don't think I'll go back organizing them so
     uuuhhh... this is the trash dump :3
 
+:Basic Deck Builder
+Builds basic suite of cards; designed to be expandable. Use to make a blackjack game
+*10 Aug 2025
+
 :Morse_Code_Translate.py
     Uses Python dict method to translate morse code input into upper case english char.
     Can detect english char to translate to morse. Displays individual char and associated 
